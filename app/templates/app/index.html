@@ -32,7 +32,7 @@
 
     <header>
         <div id="menu"><img src="{% static 'images/menu.png' %}" alt=""></div>
-        <a href="{% url 'index' %}" class="header-title">Your Flowers</a>
+        <a href="{% url 'index' %}" class="header-title">MyPlants</a>
 
         {% if user.is_authenticated %}
             <a href="{% url 'profile' %}" class="person"><img src="{% static 'images/person.png' %}" alt=""></a>   
