@@ -1,0 +1,44 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="manifest" href="{% static 'pwa/manifest.json' %}">
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+    <link rel="icon" href="{% static 'images/favicon.png' %}" type="image/x-icon">
+    <title>Flowers - Articles</title>
+</head>
+<body>
+
+    <nav id="nav-menu">
+        <h1 id="menu-arrow">Menu &larr;</h1>
+        <div>
+            <a href="{% url 'index' %}" class="menu-item">Головна</a>
+            <a href="{% url 'articles' %}" class="menu-item">Статті</a>
+            <a href="{% url 'plants' %}" class="menu-item">Рослини</a>
+            <a href="{% url 'settings' %}" class="menu-item">Налаштування</a>
+        </div>
+    </nav>
+
+    <header>
+        <div id="menu"><img src="{% static 'images/menu.png' %}" alt=""></div>
+        <a href="{% url 'index' %}" class="header-title">Your Flowers</a>
+
+        {% if user.is_authenticated %}
+            <a href="{% url 'profile' %}" class="person"><img src="{% static 'images/person.png' %}" alt=""></a>   
+        {% else %}
+            <a href="{% url 'login' %}" class="login-button">Login</a>
+        {% endif %}
+        
+    </header>
+
+    <main>
+        <h1 class="main-title">Articles</h1>
+        <div id="articles-container"></div>
+    </main>
+
+    <script src="{% static 'js/main.js' %}"></script>
+</body>
+</html>
