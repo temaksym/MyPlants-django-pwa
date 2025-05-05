@@ -9,6 +9,7 @@ my-django-pwa
 ├── manage.py
 ├── mysite
 │   ├── __init__.py
+│   ├── asgi.py
 │   ├── settings.py
 │   ├── urls.py
 │   └── wsgi.py
@@ -38,28 +39,28 @@ my-django-pwa
 1. **Clone the repository:**
    ```
    git clone <repository-url>
-   cd my-django-pwa
    ```
 
 2. **Create a virtual environment:**
    ```
    python -m venv venv
-   source venv/bin/activate  # On Windows use `venv\Scripts\activate`
+   source venv/bin/activate  # On Windows use `venv\Scripts\activate.bat`
    ```
 
 3. **Install dependencies:**
    ```
-   pip install -r requirements.txt
+   pip install -r MyPlants-django-pwa\requirements.txt
    ```
 
 4. **Run migrations:**
    ```
    python manage.py migrate
+   cd MyPlants-django-pwa
    ```
 
 5. **Run the development server:**
    ```
-   python manage.py runserver
+   uvicorn mysite.asgi:application
    ```
 
 6. **Access the application:**
