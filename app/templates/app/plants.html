@@ -42,19 +42,27 @@
         <h1 class="main-title">My Plants</h1>
         {% for user_plant in user_plants %}
             <div class="plant-card">
-                <p>{{ user_plant.id }}</p>
                 <h2>{{ user_plant.name }}</h2>
-                <p>{{ user_plant.description }}</p>
-                <p>{{ user_plant.care_instructions }}</p>
+                <p style="color:grey;">{{ user_plant.description }}</p>
+                <p>Догляд: {{ user_plant.care_instructions }}</p>
                 <p>Частота поливу: {{ user_plant.watering_frequency_days }} days</p>
                 <p>Востаннє полито: {{ user_plant.last_watered }}</p>
                 <p>Стан: {{ user_plant.state }}</p>
-                
-
+                <a href="{% url 'water' user_plant.id %}" class="water-plant-button">Полити!</a>
+                <a href="{% url 'delete' user_plant.id %}" class="delete-plant-button">Видалити</a>
             </div>
         {% endfor %}
 
-        <a class="add-plant-button">Add New Plant</a>
+        <form id="add-plant-form" method="POST" action="{% url 'add_plant' %}">
+            {% csrf_token %}
+            <label for="plant_select">Виберіть рослину:</label>
+            <select name="plant_id" id="plant_select">
+                {% for plant in all_plants %}
+                    <option value="{{ plant.id }}">{{ plant.name }}</option>
+                {% endfor %}
+            </select>
+            <button class="add-plant-button">Додати рослину</button>
+        </form>
     </main>
 
     
