@@ -4,12 +4,6 @@ from . import views
 urlpatterns = [
     path('', views.index, name='index'),
 
-    path('plant_list/', views.plant_list, name='plant_list'),
-    path('plant_detail/<int:plant_id>/', views.plant_detail, name='plant_detail'),
-    path('add_plant/', views.add_plant, name='add_plant'),
-    path('edit_plant/<int:plant_id>/', views.edit_plant, name='edit_plant'),
-    path('delete_plant/<int:plant_id>/', views.delete_plant, name='delete_plant'),
-
     path('articles/', views.articles, name='articles'),
     path('api/popular_articles/', views.popular_article_list, name='popular_article_list'),
     path('api/articles/', views.article_list, name='article_list'),
@@ -20,7 +14,9 @@ urlpatterns = [
     path('notifications/', views.notifications, name='notifications'),
 
     path('plants/', views.plant_list, name='plants'),
-    path('plant/<int:plant_id>/', views.plant_detail, name='plant_detail'),
+    path('add_plant/', views.add_plant, name='add_plant'),
+    path('delete/<int:plant_id>/', views.delete, name='delete'),
+    path('water/<int:plant_id>/', views.water, name='water'),
 
     path('login/', views.login, name='login'),
     path('login_user', views.login_user, name='login_user'),

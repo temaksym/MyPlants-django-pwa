@@ -1,32 +1,58 @@
 from django.shortcuts import render, redirect
 from django.http import JsonResponse
-from app.models import Article
-import random
+from app.models import Article, Plant, UserPlant
+
 from django.contrib.auth import logout, authenticate
 from django.contrib.auth import login as django_login
 from django.contrib.auth.models import User
+from datetime import datetime, timedelta
+import random
 
 def index(request):
     return render(request, 'app/index.html')
 
 
 def plant_list(request):
-    return render(request, 'app/plants.html')
+    user = request.user
+    if not user.is_authenticated:
+        return redirect('login')
+        
+    user_plants = UserPlant.objects.filter(user_id=user.id)
+    user_plants_all = list()
 
-def plant_detail(request, plant_id):
-    # Here you would typically fetch the plant details from the database
-    # For now, we'll just pass the plant_id to the template
-    return render(request, 'app/plant_detail.html', {'plant_id': plant_id})
+    for user_plant in user_plants:
+        plant = user_plant.plant
+
+        if user_plant.last_watered is None:
+            state = "Потрібно полити"
+            last_watered = user_plant.last_watered if user_plant.last_watered else "Ніколи"
+        elif datetime.now() > user_plant.last_watered + timedelta(days=plant.watering_frequency_days):
+            state = "Потрібно полити"
+            last_watered = user_plant.last_watered.strftime("%Y-%m-%d")
+        else:
+            state = "Полити через " + str((user_plant.last_watered + timedelta(days=plant.watering_frequency_days) - datetime.now()).days) + " днів"
+            last_watered = user_plant.last_watered.strftime("%Y-%m-%d")
+
+        
+        user_plants_all.append({
+            "name" : plant.name,
+            "description" : plant.description,
+            "care_instructions" : plant.care_instructions,
+            "watering_frequency_days" : plant.watering_frequency_days,
+            "last_watered" : last_watered,
+            "state" : state,
+        })
+    return render(request, 'app/plants.html', {'user_plants': user_plants_all})
+
+
 
 def add_plant(request):
     return render(request, 'app/add_plant.html')
 
-def edit_plant(request, plant_id):
-    # Here you would typically fetch the plant details from the database
-    # For now, we'll just pass the plant_id to the template
-    return render(request, 'app/edit_plant.html', {'plant_id': plant_id})
+def water(request, plant_id):
+    return redirect('plants')
 
-def delete_plant(request, plant_id):
+def delete(request, plant_id):
     # Here you would typically fetch the plant details from the database
     # For now, we'll just pass the plant_id to the template
     return render(request, 'app/delete_plant.html', {'plant_id': plant_id})
@@ -45,12 +71,12 @@ def article(request, article_id):
     return render(request, 'app/article.html', {'article_id': article_id, "title": title, "content": content, "created_at": created_at})
 
 def article_list(request):
-    articles = list(Article.objects.all()) # or Plant.objects.all()
+    articles = list(Article.objects.all())
     data = [{"id": article.id, 'title': article.title, 'content': article.content} for article in articles]
     return JsonResponse(data, safe=False)
 
 def popular_article_list(request):
-    articles = list(Article.objects.all()) # or Plant.objects.all()
+    articles = list(Article.objects.all())
     random_articles = random.sample(articles, min(len(articles), 3))
     data = [{"id": article.id, 'title': article.title, 'content': article.content} for article in random_articles]
     return JsonResponse(data, safe=False)

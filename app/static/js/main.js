@@ -1,31 +1,3 @@
-// This file contains the JavaScript code for the application, including any PWA-related functionality.
-
-// if ('serviceWorker' in navigator) {
-//     window.addEventListener('load', () => {
-//         navigator.serviceWorker.register('/pwa/serviceworker.js')
-//             .then(registration => {
-//                 console.log('ServiceWorker registration successful with scope: ', registration.scope);
-//             })
-//             .catch(error => {
-//                 console.log('ServiceWorker registration failed: ', error);
-//             });
-//     });
-// }
-
-// function updateOnlineStatus() {
-//     const status = document.getElementById('status');
-//     status.innerHTML = navigator.onLine ? 'Online' : 'Offline';
-// }
-
-// window.addEventListener('online', updateOnlineStatus);
-// window.addEventListener('offline', updateOnlineStatus);
-
-// document.addEventListener('DOMContentLoaded', () => {
-//     updateOnlineStatus();
-// });
-
-
-
 // This function fetches articles from the Django backend and displays them on the page.
 async function fetchArticles() {
 
@@ -103,3 +75,59 @@ document.addEventListener('DOMContentLoaded', () => {
     menuIcon.addEventListener('click', toggleNavMenu);
     closeIcon.addEventListener('click', toggleNavMenu)
 });
+
+
+
+
+
+
+// Function to create popup for adding new plant
+function createPopup() {
+    const popup = document.createElement('div');
+    popup.className = 'popup';
+    popup.innerHTML = `
+        <div class="popup-content">
+            <span class="close" id="close-popup">&times;</span>
+            <h2>Add New Plant</h2>
+            <form id="add-plant-form">
+                <label for="plant-name">Plant Name:</label>
+                <input type="text" id="plant-name" name="plant-name" required>
+                <label for="plant-type">Plant Type:</label>
+                <input type="text" id="plant-type" name="plant-type" required>
+                <button type="submit">Add Plant</button>
+            </form>
+        </div>`;
+    document.body.appendChild(popup);
+
+    // Close the popup when the close button is clicked
+    const closeButton = document.getElementById('close-popup');
+    closeButton.addEventListener('click', () => {
+        document.body.removeChild(popup);
+    });
+
+    // Handle form submission
+    const form = document.getElementById('add-plant-form');
+    form.addEventListener('submit', async (event) => {
+        event.preventDefault();
+        const plantName = document.getElementById('plant-name').value;
+        const plantType = document.getElementById('plant-type').value;
+
+        try {
+            const response = await fetch('/api/plants/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': getCookie('csrftoken')
+                },
+                body: JSON.stringify({ name: plantName, type: plantType })
+            });
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            alert('Plant added successfully!');
+            document.body.removeChild(popup);
+        } catch (error) {
+            console.error('Error adding plant:', error);
+        }
+    });
+}

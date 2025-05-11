@@ -60,7 +60,9 @@ my-django-pwa
 
 5. **Run the development server:**
    ```
-   uvicorn mysite.asgi:application
+   python manage.py runserver
+   or
+   python manage.py runserver 0.0.0.0:8000
    ```
 
 6. **Access the application:**

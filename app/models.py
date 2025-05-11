@@ -1,5 +1,5 @@
 from django.db import models
-from datetime import timedelta
+from datetime import timedelta, datetime
 
 
 class Plant(models.Model):
@@ -17,6 +17,7 @@ class UserPlant(models.Model):
     plant = models.ForeignKey(Plant, on_delete=models.CASCADE)
     user = models.ForeignKey('auth.User', on_delete=models.CASCADE)
     date_added = models.DateTimeField(auto_now_add=True)
+    last_watered = models.DateTimeField(default=datetime.now)
 
     def __str__(self):
         return f"{self.user.username}'s {self.plant.name}"
